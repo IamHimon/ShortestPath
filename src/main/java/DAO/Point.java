@@ -1,3 +1,5 @@
+package DAO;
+
 /**
  * Created by student on 2017/7/4.
  */
@@ -7,6 +9,8 @@ public class Point {
     public String label = null;
     private Double[] point = null;
 
+    public Point() {
+    }
 
     public Point(Double x, Double y) {
         X = x;
@@ -36,7 +40,7 @@ public class Point {
 
     public void setPoint(Double[] point) {
         if (point.length != 2) {
-            System.out.println("Point must be a pair of values!");
+            System.out.println("DAO.Point must be a pair of values!");
             this.point = null;
         }else{
             this.point = point;
@@ -44,7 +48,7 @@ public class Point {
     }
 
     public void printPoint(){
-        System.out.println(this.getLabel() + ": [" + this.getPoint()[0] + "," + this.getPoint()[1] + "]");
+        System.out.println(this.label + ": [" + this.X + "," + this.Y + "]");
     }
 
     public boolean isNull(){
