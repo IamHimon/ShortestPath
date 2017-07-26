@@ -386,17 +386,172 @@ public class Main {
     }
 
 
+    public static ArrayList<Point> showPath( ArrayList<Floor> floors, Point startPoint, Point endPoint, String way) throws Exception {
+        int start_id;
+        int end_id;
+        ArrayList<String> path = new ArrayList<>();
+
+        switch (way) {
+            case "S": {
+                buildLinkedPointsPair_SLE(floors, "S");
+                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_S);
+
+                try {
+                    start_id = allFloor_point_id_map.get(startPoint.getLabel());
+                    end_id = allFloor_point_id_map.get(endPoint.getLabel());
+                    final int[] pred = Dijkstra.dijkstra(t, start_id);
+                    System.out.println("Stair path:");
+//                    Dijkstra.printPath(t, pred, start_id, end_id);
+                    path = Dijkstra.getPointsInPath(t, pred, start_id, end_id);
+                } catch (Exception e) {
+                    throw new Exception("The node is not exit!");
+                }
+                break;
+            }
+            case "L": {
+                buildLinkedPointsPair_SLE(floors, "L");
+                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_L);
+                try {
+                    start_id = allFloor_point_id_map.get(startPoint.getLabel());
+                    end_id = allFloor_point_id_map.get(endPoint.getLabel());
+                    final int[] pred = Dijkstra.dijkstra(t, start_id);
+                    System.out.println("Lift path:");
+//                    Dijkstra.printPath(t, pred, start_id, end_id);
+                    path = Dijkstra.getPointsInPath(t, pred, start_id, end_id);
+                } catch (Exception e) {
+                    throw new Exception("The node is not exit!");
+                }
+                break;
+            }
+            case "E": {
+                buildLinkedPointsPair_SLE(floors, "E");
+
+                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_E);
+                System.out.println(t.isConnected());
+                print4J(allFloor_point_id_map);
+
+                try {
+                    start_id = allFloor_point_id_map.get(startPoint.getLabel());
+                    end_id = allFloor_point_id_map.get(endPoint.getLabel());
+                    System.out.println(start_id);
+                    System.out.println(end_id);
+                    final int[] pred = Dijkstra.dijkstra(t, start_id);
+                    System.out.println("Escalator path:");
+//                    Dijkstra.printPath(t, pred, start_id, end_id);
+                    path = Dijkstra.getPointsInPath(t, pred, start_id, end_id);
+                } catch (Exception e) {
+                    throw new Exception("The node is not exit!");
+                }
+                break;
+            }
+            case "A":{
+                buildLinkedPointsPair(floors);
+                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_SLE);
+                try {
+                    start_id = allFloor_point_id_map.get(startPoint.getLabel());
+                    end_id = allFloor_point_id_map.get(endPoint.getLabel());
+                    final int[] pred = Dijkstra.dijkstra(t, start_id);
+                    System.out.println("Anyway path:");
+//                    Dijkstra.printPath(t, pred, start_id, end_id);
+                    path = Dijkstra.getPointsInPath(t, pred, start_id, end_id);
+
+                } catch (Exception e) {
+                    throw new Exception("The node is not exit!");
+                }
+                break;
+            }
+            default:
+                System.out.println("please input the correct mode:(S,L,E,A)");
+        }
+
+        ArrayList<Point> allPoints = new ArrayList<>();
+        for (Floor floor:floors){
+            allPoints.addAll(floor.getAllPoints());
+        }
+
+        ArrayList<Point> allPointsInPath = new ArrayList<>();
+        for (String p:path){
+            for (Point point:allPoints)
+                if (point.label.equals(p))
+                    allPointsInPath.add(point);
+        }
+        return allPointsInPath;
+    }
+
+
+    /*给定随机起始点和目的点，是模糊点。返回路径多有点的集合*/
+    public static ArrayList<Point> Trace(Floor startFloor, Point startRandomPoint, Floor endFloor, Point endRandomPoint, ArrayList<Floor> floors, String way){
+        ArrayList<Point> allPointsInPath = new ArrayList<>();
+
+        //修改起点和终点的label，加上Floor_name前缀
+        startRandomPoint.setLabel(startFloor.getFloor_name()+"_"+startRandomPoint.label);
+        endRandomPoint.setLabel(endFloor.getFloor_name()+"_"+endRandomPoint.label);
+
+
+        //起始点在其所在层找到最近的点，然后加入到这一层
+        Point sp = getNearestPointInRoad(startFloor, startRandomPoint);
+        System.out.println("The nearest RoadPoint to the start_random_point:");
+        sp.printPoint();
+        try {
+            startFloor.addCommonPoint(new Point[]{startRandomPoint, sp});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        startFloor.describeFloor();
+        //目的地点在其所在层找到最近点，然后加入到这一层
+        Point ep = getNearestPointInRoad(endFloor, endRandomPoint);
+        System.out.println("The nearest RoadPoint to the end_random_point:");
+        ep.printPoint();
+        try {
+            endFloor.addCommonPoint(new Point[]{endRandomPoint, ep});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        endFloor.describeFloor();
+
+        //然后调用showPaht方法
+        try {
+            allPointsInPath =  showPath(floors, startRandomPoint, endRandomPoint, way);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return allPointsInPath;
+    }
+
+
+
     public static void main(String[] args) throws Exception {
-//        String file5 = "src/main/data/5_data.txt";
-//        Floor floor5 = buildFloorFromFile(5, "floor5", file5);
+        String file5 = "src/main/data/5.2_data.txt";
+        Floor floor5 = buildFloorFromFile(5, "floor5", file5);
 //        System.out.println(floor5.getAllPoints().size());
 //        floor5.describeFloor();
+
+        String file4 = "src/main/data/4.2_data.txt";
+        Floor floor4 = buildFloorFromFile(4, "floor4", file4);
+//        System.out.println(floor4.getAllPoints().size());
+//        floor4.describeFloor();
+
+        ArrayList<Floor> floors = new ArrayList<>();
+        floors.add(floor4);
+        floors.add(floor5);
+
+        Point start = new Point("CF", new Double[]{1018.194175,993.6220627});
+        Point end = new Point("CF", new Double[]{980.1152038,1001.934169});
+
+        ArrayList<Point> result = Trace(floor4, start, floor5, end, floors, "A");
+//        System.out.println(result);
+        for (Point point:result)
+            System.out.println(point.label);
+
+
+
 
 //        Point p = getNearestPointInRoad(floor5, new Point(1017.601848,995.3833048));
 //        p.printPoint();
 
 
-
+/*
         String filename1 = "src/main/data2/3.1.txt";
         String filename2 = "src/main/data2/4.1.txt";
         String filename3 = "src/main/data2/5.1.txt";
@@ -404,14 +559,14 @@ public class Main {
         //按顺序添加floor
 
         Floor floor1 = buildFloorFromFile(3, "floor3", filename1);
-        /*给定一个模糊点，先寻找到他最近的路网点*/
+        //给定一个模糊点，先寻找到他最近的路网点
         Point randomP = new Point("floor3_CR", new Double[]{1017.601848,995.3833048});
         Point p = getNearestPointInRoad(floor1, randomP);
         p.printPoint();
         floor1.addCommonPoint(new Point[]{randomP, p});
 
         floor1.describeFloor();
-/*
+
         Floor floor2 = buildFloorFromFile(4, "floor4", filename2);
 
         Floor floor3 = buildFloorFromFile(5, "floor5", filename3);

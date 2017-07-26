@@ -217,9 +217,16 @@ public class ToolBox {
 
         public static void main (String[]args) {
 //            String path = "src/main/data/5c.csv";
-//            ArrayList<Point[]> allPointsPair = readCSV(path, "floor5");
-//            writeRecords(allPointsPair, "src/main/data/5_data.txt");
-            System.out.println(isIntersects(new Point[]{new Point(0.0, 0.0), new Point(0.9, 0.9)}, new Point[]{new Point(0.0, 2.0), new Point(2.0, 5.0)}));
+//            String path2 = "src/main/data/5.2.csv";
+//            ArrayList<Point[]> allPointsPair = readCSV(path2, "floor5");
+//            writeRecords(allPointsPair, "src/main/data/5.2_data.txt");
+
+            String path4 = "src/main/data/4.2.csv";
+            ArrayList<Point[]> allPointsPair = readCSV(path4, "floor4");
+            writeRecords(allPointsPair, "src/main/data/4.2_data.txt");
+
+
+//            System.out.println(isIntersects(new Point[]{new Point(0.0, 0.0), new Point(0.9, 0.9)}, new Point[]{new Point(0.0, 2.0), new Point(2.0, 5.0)}));
 
 
         }

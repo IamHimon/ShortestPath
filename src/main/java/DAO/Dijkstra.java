@@ -91,6 +91,18 @@ public class Dijkstra {
 //        System.out.println(G.pathDistance(pathID));
     }
 
+    public static ArrayList<String> getPointsInPath(WeightedGraph G, int[] pred, int s, int e) {
+        final ArrayList<String> path = new ArrayList();
+        int x = e;
+        while (x != s) {
+            path.add(0, (String) G.getLabel(x));
+            x = pred[x];
+        }
+        path.add(0, (String) G.getLabel(s));
+//        System.out.println(path);
+        return path;
+    }
+
     public static Quartet getResultTuple(WeightedGraph G, HashMap<String, Integer> point_id_map,int[] pred, String start, String end){
         int s = point_id_map.get(start);
         int e = point_id_map.get(end);
