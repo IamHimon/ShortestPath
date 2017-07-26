@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
+import static util.Utils.distanceBetweenTwoPoints;
 import static util.Utils.isEqual;
 
 
@@ -28,12 +29,13 @@ public class Floor {
     private ArrayList<Point[]> allBarrierPointsPair;
     private ArrayList<Point> allPoints; //不重复
 
-    public Floor(Integer num_floor, String floor_name, WeightedGraph graph, ArrayList<Point> allPoints,
+    public Floor(Integer num_floor, String floor_name, WeightedGraph graph, ArrayList<Point> allPoints,ArrayList<Point[]> allPointsPair,
                  HashMap<String, Integer> point_id_map, ArrayList<Point[]> allBarrierPointsPair) {
         this.num_floor = num_floor;
         this.floor_name = floor_name;
         this.graph = graph;
         this.allPoints = allPoints;
+        this.allPointsPair = allPointsPair;
         this.point_id_map = point_id_map;
         this.allBarrierPointsPair = allBarrierPointsPair;
         ArrayList<String> common_points = new ArrayList<>();
@@ -162,7 +164,7 @@ public class Floor {
     }
 
     public ArrayList<Point> getAllPoints() {
-        return allPoints;
+        return this.allPoints;
     }
 
     public void setAllPoints(ArrayList<Point> allPoints) {
@@ -246,6 +248,44 @@ public class Floor {
         }
         return setBarrierPoints;
     }
+
+    /*
+    *定义：模糊点，任意给出的一点，不知道他是在路网上还是在其他任何地方的点。
+    * 路网点：来定义一条可行路的两个点，是最初的数据源，最初构建Floor的成员变量。
+    *加入一点，传入这点与找到的最近（考虑障碍物）的路网点的pointPair（第一个是模糊点，第二个是路网点），
+    *需要更新Floor的变量有allPoints，allPointsPair，point_id_map,Graph*/
+    public void addCommonPoint(Point[] pointPair)throws Exception{
+        if (pointPair.length!=2)
+            throw new Exception("When add commonPoint to Floor, Please input a pair of point!");
+        this.common_points.add(pointPair[0].label);
+        this.allPoints.add(pointPair[0]);
+        this.allPointsPair.add(pointPair);
+        this.point_id_map.put(pointPair[0].label, point_id_map.size());
+
+        //还需要将这个点加入到Graph，也就是重建。
+        WeightedGraph t = new WeightedGraph(this.point_id_map.size());
+        for (Object obj:this.point_id_map.keySet()){
+            t.setLabel(this.point_id_map.get(obj), obj);
+        }
+
+        for (int i = 0; i<allPointsPair.size();i++){
+            int source = this.point_id_map.get(this.allPointsPair.get(i)[0].getLabel());
+            int target = this.point_id_map.get(this.allPointsPair.get(i)[1].getLabel());
+            Double weight = distanceBetweenTwoPoints(this.allPointsPair.get(i)[0], this.allPointsPair.get(i)[1]);
+
+            t.addEdge(source, target, weight);
+            // 无向图
+            t.addEdge(target, source, weight);
+        }
+
+        this.graph = t;
+
+        if (!t.isConnected()){
+            throw new Exception("The graph is not connected!");
+        }
+
+    }
+
 
 
 }

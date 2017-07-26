@@ -198,19 +198,21 @@ public class ToolBox {
         int nearestPointIndex = 0;
         for (int i=0;i< allPoints.size();i++){
             hasBarrier = false;
+            //判断allPoints.get(i)与point之间是否有障碍物
             for(Point[] pp:allBarrierPointsPair){
                 if (isIntersects(new Point[]{allPoints.get(i), point}, pp)) {
                     hasBarrier = true;
                     break;
                 }
             }
-
-//            if (distanceBetweenTwoPoints(allPoints.get(i), point) <
-
-
-
+            Double distance = distanceBetweenTwoPoints(allPoints.get(i), point);
+            if (!hasBarrier && distance < shortestDistance){
+                shortestDistance = distance;
+                nearestPointIndex = i;
+            }
         }
-        return point;
+//        System.out.println(nearestPointIndex);
+        return allPoints.get(nearestPointIndex);
     }
 
         public static void main (String[]args) {

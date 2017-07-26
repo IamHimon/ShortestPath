@@ -1,9 +1,11 @@
 import DAO.Dijkstra;
 import DAO.Floor;
+import DAO.Point;
 import DAO.WeightedGraph;
 import org.javatuples.Quartet;
 import java.util.ArrayList;
 
+import static util.ToolBox.*;
 import static util.Utils.*;
 
 
@@ -318,7 +320,6 @@ public class Main {
                 buildLinkedPointsPair_SLE(floors, "S");
                 WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_S);
 
-
                 try {
                     start_id = allFloor_point_id_map.get(start.getFloor_name() + "_" + startNode);
                     end_id = allFloor_point_id_map.get(end.getFloor_name() + "_" + endNode);
@@ -386,11 +387,15 @@ public class Main {
 
 
     public static void main(String[] args) throws Exception {
-        String file5 = "src/main/data/5_data.txt";
-        Floor floor5 = buildFloorFromFile(5, "floor5", file5);
-        floor5.describeFloor();
+//        String file5 = "src/main/data/5_data.txt";
+//        Floor floor5 = buildFloorFromFile(5, "floor5", file5);
+//        System.out.println(floor5.getAllPoints().size());
+//        floor5.describeFloor();
 
-/*
+//        Point p = getNearestPointInRoad(floor5, new Point(1017.601848,995.3833048));
+//        p.printPoint();
+
+
 
         String filename1 = "src/main/data2/3.1.txt";
         String filename2 = "src/main/data2/4.1.txt";
@@ -399,7 +404,14 @@ public class Main {
         //按顺序添加floor
 
         Floor floor1 = buildFloorFromFile(3, "floor3", filename1);
+        /*给定一个模糊点，先寻找到他最近的路网点*/
+        Point randomP = new Point("floor3_CR", new Double[]{1017.601848,995.3833048});
+        Point p = getNearestPointInRoad(floor1, randomP);
+        p.printPoint();
+        floor1.addCommonPoint(new Point[]{randomP, p});
 
+        floor1.describeFloor();
+/*
         Floor floor2 = buildFloorFromFile(4, "floor4", filename2);
 
         Floor floor3 = buildFloorFromFile(5, "floor5", filename3);
@@ -410,7 +422,7 @@ public class Main {
         floors.add(floor3);
 
         showPath(floors, floor1, "C5", floor3, "C10", "A");
-        showPath(floors, floor1, "C2", floor3, "C19", "A");
+       showPath(floors, floor1, "C2", floor3, "C19", "A");
         showPath(floors, floor1, "C1", floor3, "C27", "L");
         showPath(floors, floor1, "C2", floor3, "C20", "S");
         showPath(floors, floor1, "C5", floor3, "C10", "E");

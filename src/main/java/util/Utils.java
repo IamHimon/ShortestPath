@@ -205,7 +205,7 @@ public class Utils {
             for (int i=0;i<setPoints.size();i++){
                 point_id_map.put(setPoints.get(i).getLabel(), i);
             }
-            allPoints.clear();
+//            allPoints.clear();
 
         }catch (FileNotFoundException e){
             System.out.println("找不到指定文件");
@@ -243,7 +243,7 @@ public class Utils {
             throw new Exception("The graph is not connected!");
         }
 
-        return new Floor(num_floor, floor_name, t, allPoints, point_id_map, allBarrierPointsPair);
+        return new Floor(num_floor, floor_name, t, setPoints, allPointsPair, point_id_map, allBarrierPointsPair);
     }
 
     /*
@@ -390,6 +390,9 @@ public class Utils {
             point[i++] = Double.valueOf(s);
         }
         p.setPoint(point);
+        p.setX(point[0]);
+        p.setY(point[1]);
+
         return p;
     }
 
@@ -400,8 +403,8 @@ public class Utils {
     }
 
     public static Double distanceBetweenTwoPoints(Point p1, Point p2){
-        double _x = Math.abs(p1.getPoint()[0] - p2.getPoint()[0]);
-        double _y = Math.abs(p1.getPoint()[1] - p2.getPoint()[1]);
+        double _x = Math.abs(p1.getY() - p2.getX());
+        double _y = Math.abs(p1.getY() - p2.getX());
         return Math.sqrt(_x*_x + _y*_y);
     }
 

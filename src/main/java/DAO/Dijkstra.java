@@ -87,7 +87,7 @@ public class Dijkstra {
         path.add(0, G.getLabel(s));
         pathID.add(0, s);
         System.out.println(path);
-//        System.out.println(pathID);
+        System.out.println(pathID);
 //        System.out.println(G.pathDistance(pathID));
     }
 

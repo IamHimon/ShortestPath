@@ -13,8 +13,8 @@ public class Point {
     }
 
     public Point(Double x, Double y) {
-        X = x;
-        Y = y;
+        this.X = x;
+        this.Y = y;
     }
 
     public Point(String label, Double[] point) {
@@ -24,6 +24,22 @@ public class Point {
             this.X = point[0];
             this.Y = point[1];
         }
+    }
+
+    public Double getX() {
+        return X;
+    }
+
+    public void setX(Double x) {
+        X = x;
+    }
+
+    public Double getY() {
+        return Y;
+    }
+
+    public void setY(Double y) {
+        Y = y;
     }
 
     public String getLabel() {
