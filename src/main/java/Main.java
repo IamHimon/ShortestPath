@@ -489,7 +489,9 @@ public class Main {
 
 
         //起始点在其所在层找到最近的点，然后加入到这一层
-        Point sp = getNearestPointInRoad(startFloor, startRandomPoint);
+        getNearestPointOnRoadAndAddToFloor(startFloor, startRandomPoint);
+
+        Point sp = getNearestPointInRoadPoint(startFloor, startRandomPoint);
         System.out.println("The nearest RoadPoint to the start_random_point:");
         sp.printPoint();
         try {
@@ -499,7 +501,7 @@ public class Main {
         }
 //        startFloor.describeFloor();
         //目的地点在其所在层找到最近点，然后加入到这一层
-        Point ep = getNearestPointInRoad(endFloor, endRandomPoint);
+        Point ep = getNearestPointInRoadPoint(endFloor, endRandomPoint);
         System.out.println("The nearest RoadPoint to the end_random_point:");
         ep.printPoint();
         try {
@@ -510,6 +512,9 @@ public class Main {
 //        endFloor.describeFloor();
 
         //然后调用showPaht方法
+//        ArrayList<Floor> newFlorrs = new ArrayList<>();
+//        newFlorrs.add(startFloor);
+//        newFlorrs.add(endFloor);
         try {
             allPointsInPath =  showPath(floors, startRandomPoint, endRandomPoint, way);
         } catch (Exception e) {
@@ -520,8 +525,33 @@ public class Main {
     }
 
 
+    public static ArrayList<Point> Trace2(Floor startFloor, Point startRandomPoint, Floor endFloor, Point endRandomPoint, ArrayList<Floor> floors, String way){
+        ArrayList<Point> allPointsInPath = new ArrayList<>();
+        //修改起点和终点的label，加上Floor_name前缀
+        startRandomPoint.setLabel(startFloor.getFloor_name()+"_"+startRandomPoint.label);
+        endRandomPoint.setLabel(endFloor.getFloor_name()+"_"+endRandomPoint.label);
+
+
+        //起始点在其所在层找到最近的点，然后加入到这一层
+        getNearestPointOnRoadAndAddToFloor(startFloor, startRandomPoint);
+
+        //目的地点在其所在层找到最近点，然后加入到这一层
+        getNearestPointOnRoadAndAddToFloor(endFloor, endRandomPoint);
+
+        try {
+            allPointsInPath =  showPath(floors, startRandomPoint, endRandomPoint, way);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return allPointsInPath;
+    }
+
 
     public static void main(String[] args) throws Exception {
+        String file3 = "src/main/data/3.2_data.txt";
+        Floor floor3 = buildFloorFromFile(3, "floor3", file3);
+
         String file5 = "src/main/data/5.2_data.txt";
         Floor floor5 = buildFloorFromFile(5, "floor5", file5);
 //        System.out.println(floor5.getAllPoints().size());
@@ -533,16 +563,34 @@ public class Main {
 //        floor4.describeFloor();
 
         ArrayList<Floor> floors = new ArrayList<>();
+        floors.add(floor3);
         floors.add(floor4);
         floors.add(floor5);
 
-        Point start = new Point("CF", new Double[]{1018.194175,993.6220627});
-        Point end = new Point("CF", new Double[]{980.1152038,1001.934169});
+        Point start = new Point("CF", new Double[]{1053.066,990.246});
+//        Point start = new Point("CF", new Double[]{903.421,991.291});
+//        Point end = new Point("CF", new Double[]{1043.702,999.082});
+        Point end = new Point("CF", new Double[]{996.002,989.779});
 
-        ArrayList<Point> result = Trace(floor4, start, floor5, end, floors, "A");
-//        System.out.println(result);
-        for (Point point:result)
-            System.out.println(point.label);
+//        ArrayList<Point> resultA = Trace(floor4, start, floor5, end, floors, "A");
+//        for (Point point:resultA)
+//            System.out.print(point.label +":"+"["+point.X+","+point.Y+"] => ");
+
+//        ArrayList<Point> resultL = Trace(floor4, start, floor5, end, floors, "L");
+//        for (Point point:resultL)
+//            System.out.print(point.label +":"+"["+point.X+","+point.Y+"] => ");
+//
+        ArrayList<Point> resultS = Trace2(floor3, start, floor5, end, floors, "S");
+        System.out.print("[");
+        for (Point point:resultS) {
+            System.out.print("{x:" + point.X + ",y:" + point.Y + "," + "id:\"" + point.label + "\"},");
+//            System.out.print(point.label +":"+"["+point.X+","+point.Y+"] => ");
+        }
+        System.out.print("]");
+//
+//        ArrayList<Point> resultE = Trace(floor4, start, floor5, end, floors, "E");
+//        for (Point point:resultE)
+//            System.out.print(point.label +":"+"["+point.X+","+point.Y+"] => ");
 
 
 

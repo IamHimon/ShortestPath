@@ -12,7 +12,7 @@ import java.io.OutputStream;
 import java.nio.channels.Pipe;
 import java.util.*;
 
-import static util.Utils.distanceBetweenTwoPoints;
+import static util.Utils.*;
 
 /**
  * Created by 猛 on 2017/7/21.
@@ -190,7 +190,7 @@ public class ToolBox {
     }
 
     /*给定任意一点，在这一层找到离他最近的路上的点（也就是Floor构建Graph中的点），需要考虑障碍物的存在*/
-    public static Point getNearestPointInRoad(Floor floor, Point point){
+    public static Point getNearestPointInRoadPoint(Floor floor, Point point){
         Double shortestDistance = Double.MAX_VALUE;
         ArrayList<Point> allPoints = floor.getAllPoints();
         ArrayList<Point[]> allBarrierPointsPair = floor.getAllBarrierPointsPair();
@@ -215,18 +215,179 @@ public class ToolBox {
         return allPoints.get(nearestPointIndex);
     }
 
+    /*找到路网上最近的点（绕开障碍物），然后将这一点加入到Floor中，重构Graph*/
+    public static void getNearestPointOnRoadAndAddToFloor(Floor floor, Point point){
+        Double shortestDistance = Double.MAX_VALUE;
+        ArrayList<Point[]> allPointsPair = floor.getAllPointsPair();
+        ArrayList<Point[]> allBarrierPointsPair = floor.getAllBarrierPointsPair();
+        boolean hasBarrier;
+        int nearestPointIndex = 0;
+        ArrayList<Point> allClosedPoints = new ArrayList<>();
+
+        for (int i=0;i<allPointsPair.size();i++){
+            hasBarrier = false;
+            try {
+                Point closedPoint = getClosestPointOnSegment(allPointsPair.get(i), point);
+                allClosedPoints.add(closedPoint);
+                for(Point[] pp:allBarrierPointsPair){
+                    if (isIntersects(new Point[]{closedPoint, point}, pp)) {
+                        hasBarrier = true;
+                        break;
+                    }
+                }
+                Double distance = distanceBetweenTwoPoints(closedPoint, point);
+//                System.out.println("i:"+i+",distance:"+distance+",hasBarrier:"+hasBarrier);
+                if (!hasBarrier && distance < shortestDistance){
+                    shortestDistance = distance;
+                    nearestPointIndex = i;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+//        System.out.println("nearestPointIndex:"+nearestPointIndex);
+//        System.out.println("shortestDistance:"+shortestDistance);
+        System.out.println("The segment:");
+        allPointsPair.get(nearestPointIndex)[0].printPoint();
+        allPointsPair.get(nearestPointIndex)[1].printPoint();
+        allClosedPoints.get(nearestPointIndex).printPoint();
+        Point closedPoint = allClosedPoints.get(nearestPointIndex);
+        try {
+            floor.addCommonPoint(allPointsPair.get(nearestPointIndex),closedPoint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        closedPoint.printPoint();
+
+//        return allClosedPoints.get(nearestPointIndex);
+    }
+
+
+    public static Double shortestDistance(Double x1,Double y1,Double x2,Double y2,Double x3,Double y3)
+    {
+        Double px=x2-x1;
+        Double py=y2-y1;
+        Double temp=(px*px)+(py*py);
+        Double u=((x3 - x1) * px + (y3 - y1) * py) / (temp);
+        if(u>1.0){
+            u=1.0;
+        }
+        else if(u<0.0){
+            u=0.0;
+        }
+        Double x = x1 + u * px;
+        Double y = y1 + u * py;
+
+        Double dx = x - x3;
+        Double dy = y - y3;
+        Double dist = Math.sqrt(dx*dx + dy*dy);
+        return dist;
+
+    }
+
+
+/*返回线段上到某一点最近的点，传入一个线段pointsPair*/
+    public static Point getClosestPointOnSegment(Point[] pointsPair, Point p) throws Exception {
+        if (pointsPair.length!=2)
+            throw new Exception("Please input a pair of points!");
+        return getClosestPointOnSegment(pointsPair[0].X, pointsPair[0].Y, pointsPair[1].X, pointsPair[1].Y, p.X, p.Y);
+
+    }
+
+    /**
+     * Returns closest point on segment to point
+     *
+     * @param sx1
+     *            segment x coord 1
+     * @param sy1
+     *            segment y coord 1
+     * @param sx2
+     *            segment x coord 2
+     * @param sy2
+     *            segment y coord 2
+     * @param px
+     *            point x coord
+     * @param py
+     *            point y coord
+     * @return closets point on segment to point
+     */
+    public static Point getClosestPointOnSegment(Double sx1, Double sy1, Double sx2, Double sy2, Double px, Double py)
+    {
+        Double xDelta = sx2 - sx1;
+        Double yDelta = sy2 - sy1;
+
+        if ((xDelta == 0.0) && (yDelta == 0.0))
+        {
+            throw new IllegalArgumentException("Segment start equals segment end");
+        }
+
+        Double u = ((px - sx1) * xDelta + (py - sy1) * yDelta) / (xDelta * xDelta + yDelta * yDelta);
+
+        final Point closestPoint;
+        if (u < 0.0)
+        {
+            closestPoint = new Point(sx1, sy1);
+        }
+        else if (u > 1.0)
+        {
+            closestPoint = new Point(sx2, sy2);
+        }
+        else
+        {
+            closestPoint = new Point(sx1 + u * xDelta,sy1 + u * yDelta);
+        }
+        closestPoint.setLabel("CCP");//common closed point
+        return closestPoint;
+    }
+
+
         public static void main (String[]args) {
 //            String path = "src/main/data/5c.csv";
 //            String path2 = "src/main/data/5.2.csv";
 //            ArrayList<Point[]> allPointsPair = readCSV(path2, "floor5");
 //            writeRecords(allPointsPair, "src/main/data/5.2_data.txt");
 
-            String path4 = "src/main/data/4.2.csv";
-            ArrayList<Point[]> allPointsPair = readCSV(path4, "floor4");
-            writeRecords(allPointsPair, "src/main/data/4.2_data.txt");
+//            String path4 = "src/main/data/4.2.csv";
+//            ArrayList<Point[]> allPointsPair = readCSV(path4, "floor4");
+//            writeRecords(allPointsPair, "src/main/data/4.2_data.txt");
+
+//            String path3 = "src/main/data/3.2.csv";
+//            ArrayList<Point[]> allPointsPair = readCSV(path3, "floor3");
+//            writeRecords(allPointsPair, "src/main/data/3.2_data.txt");
 
 
 //            System.out.println(isIntersects(new Point[]{new Point(0.0, 0.0), new Point(0.9, 0.9)}, new Point[]{new Point(0.0, 2.0), new Point(2.0, 5.0)}));
+
+//            Double dist = shortestDistance(1.0,0.0,1.0,2.0,2.6,0.5);
+//            System.out.println(dist);
+//            double dist2 = pointToLine(1.0,0.0,1.0,2.0,2.6,0.5);
+//            System.out.println(dist2);
+//            [C63#1044.397804,992.7476449]*[C47#1044.397804,988.8116969]
+//            Point p = null;
+//            try {
+//                p = getClosestPointOnSegment(new Point[]{new Point(1044.397804,988.8116969), new Point(1044.397804,992.7476449)}, new Point(1053.066,990.246));
+//                p.printPoint();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+
+
+
+            String file3 = "src/main/data/3.2_data.txt";
+            try {
+                Floor floor3 = buildFloorFromFile(3, "floor3", file3);
+//                Point start = new Point("CF", new Double[]{1053.066,990.246});
+                Point start = new Point("CF", new Double[]{1047.066,990.246});
+
+                getNearestPointOnRoadAndAddToFloor(floor3, start);
+
+//                floor3.describeFloor();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+//
 
 
         }

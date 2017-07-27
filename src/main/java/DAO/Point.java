@@ -71,7 +71,4 @@ public class Point {
         return (this.label==null)&&(this.point ==null);
     }
 
-    public static void main(String[] args) {
-
-    }
 }

@@ -157,6 +157,7 @@ public class WeightedGraph {
          }
          //print isolated points
          if (!isolatedPoints.isEmpty())
+//             System.out.println(Arrays.toString(visit));
             System.out.println(isolatedPoints);
 
          return isCon;
@@ -172,7 +173,7 @@ public class WeightedGraph {
 
      }
 
-    public static void main(String args[]) {
+    public static void main1(String args[]) {
         final WeightedGraph t = new WeightedGraph(8);
         t.setLabel(0, "v0");
         t.setLabel(1, "v1");

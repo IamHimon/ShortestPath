@@ -403,8 +403,8 @@ public class Utils {
     }
 
     public static Double distanceBetweenTwoPoints(Point p1, Point p2){
-        double _x = Math.abs(p1.getY() - p2.getX());
-        double _y = Math.abs(p1.getY() - p2.getX());
+        double _x = Math.abs(p1.getX() - p2.getX());
+        double _y = Math.abs(p1.getY() - p2.getY());
         return Math.sqrt(_x*_x + _y*_y);
     }
 
