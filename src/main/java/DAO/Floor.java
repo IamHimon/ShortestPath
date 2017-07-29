@@ -66,22 +66,6 @@ public class Floor {
 
     }
 
-    public Floor(Integer num_floor, String floor_name, WeightedGraph graph, ArrayList<String> common_points, ArrayList<String> stairs,
-                 ArrayList<String> lifts, ArrayList<String> escalators, ArrayList<String> barriers, HashMap<String, Integer> point_id_map,
-                 ArrayList<Point[]> allPointsPair, ArrayList<Point> allPoints) {
-        this.num_floor = num_floor;
-        this.floor_name = floor_name;
-        this.graph = graph;
-        this.common_points = common_points;
-        this.stairs = stairs;
-        this.lifts = lifts;
-        this.escalators = escalators;
-        this.barriers = barriers;
-        this.point_id_map = point_id_map;
-        this.allPointsPair = allPointsPair;
-        this.allPoints = allPoints;
-    }
-
     public Integer getNum_floor() {
         return num_floor;
     }

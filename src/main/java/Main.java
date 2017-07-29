@@ -10,7 +10,6 @@ import static util.Utils.*;
 
 
 public class Main {
-    public static ArrayList<String> path = new ArrayList<>();
     public static ArrayList<String> stair_path = new ArrayList<>();
     public static ArrayList<String> lift_path = new ArrayList<>();
     public static ArrayList<String> escalator_path = new ArrayList<>();
@@ -311,176 +310,84 @@ public class Main {
         }
     }
 
-    public static void showPath( ArrayList<Floor> floors, Floor start, String startNode, Floor end, String endNode, String way) throws Exception {
-        int start_id;
-        int end_id;
-
-        switch (way) {
-            case "S": {
-                buildLinkedPointsPair_SLE(floors, "S");
-                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_S);
-
-                try {
-                    start_id = allFloor_point_id_map.get(start.getFloor_name() + "_" + startNode);
-                    end_id = allFloor_point_id_map.get(end.getFloor_name() + "_" + endNode);
-                    final int[] pred = Dijkstra.dijkstra(t, start_id);
-                    System.out.println("Stair path:");
-                    Dijkstra.printPath(t, pred, start_id, end_id);
-                } catch (Exception e) {
-                    throw new Exception("The node is not exit!");
-                }
-                break;
-            }
-            case "L": {
-                buildLinkedPointsPair_SLE(floors, "L");
-                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_L);
-                try {
-                    start_id = allFloor_point_id_map.get(start.getFloor_name() + "_" + startNode);
-                    end_id = allFloor_point_id_map.get(end.getFloor_name() + "_" + endNode);
-                    final int[] pred = Dijkstra.dijkstra(t, start_id);
-                    System.out.println("Lift path:");
-                    Dijkstra.printPath(t, pred, start_id, end_id);
-                } catch (Exception e) {
-                    throw new Exception("The node is not exit!");
-                }
-                break;
-            }
-            case "E": {
-                buildLinkedPointsPair_SLE(floors, "E");
-
-                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_E);
-                System.out.println(t.isConnected());
-                print4J(allFloor_point_id_map);
-
-                try {
-                    start_id = allFloor_point_id_map.get(start.getFloor_name() + "_" + startNode);
-                    end_id = allFloor_point_id_map.get(end.getFloor_name() + "_" + endNode);
-                    System.out.println(start_id);
-                    System.out.println(end_id);
-                    final int[] pred = Dijkstra.dijkstra(t, start_id);
-                    System.out.println("Escalator path:");
-                    Dijkstra.printPath(t, pred, start_id, end_id);
-                } catch (Exception e) {
-                    throw new Exception("The node is not exit!");
-                }
-                break;
-            }
-            case "A":{
-                buildLinkedPointsPair(floors);
-                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_SLE);
-                try {
-                    start_id = allFloor_point_id_map.get(start.getFloor_name() + "_" + startNode);
-                    end_id = allFloor_point_id_map.get(end.getFloor_name() + "_" + endNode);
-                    final int[] pred = Dijkstra.dijkstra(t, start_id);
-                    System.out.println("Anyway path:");
-                    Dijkstra.printPath(t, pred, start_id, end_id);
-                } catch (Exception e) {
-                    throw new Exception("The node is not exit!");
-                }
-                break;
-            }
-            default:
-                System.out.println("please input the correct mode:(S,L,E,A)");
-        }
-
-    }
-
-
-    public static ArrayList<Point> showPath( ArrayList<Floor> floors, Point startPoint, Point endPoint, String way) throws Exception {
-        int start_id;
-        int end_id;
-        ArrayList<String> path = new ArrayList<>();
-
-        switch (way) {
-            case "S": {
-                buildLinkedPointsPair_SLE(floors, "S");
-                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_S);
-
-                try {
-                    start_id = allFloor_point_id_map.get(startPoint.getLabel());
-                    end_id = allFloor_point_id_map.get(endPoint.getLabel());
-                    final int[] pred = Dijkstra.dijkstra(t, start_id);
-                    System.out.println("Stair path:");
+//    public static void showPath( ArrayList<Floor> floors, Floor start, String startNode, Floor end, String endNode, String way) throws Exception {
+//        int start_id;
+//        int end_id;
+//
+//        switch (way) {
+//            case "S": {
+//                buildLinkedPointsPair_SLE(floors, "S");
+//                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_S);
+//
+//                try {
+//                    start_id = allFloor_point_id_map.get(start.getFloor_name() + "_" + startNode);
+//                    end_id = allFloor_point_id_map.get(end.getFloor_name() + "_" + endNode);
+//                    final int[] pred = Dijkstra.dijkstra(t, start_id);
+//                    System.out.println("Stair path:");
 //                    Dijkstra.printPath(t, pred, start_id, end_id);
-                    path = Dijkstra.getPointsInPath(t, pred, start_id, end_id);
-                } catch (Exception e) {
-                    throw new Exception("The node is not exit!");
-                }
-                break;
-            }
-            case "L": {
-                buildLinkedPointsPair_SLE(floors, "L");
-                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_L);
-                try {
-                    start_id = allFloor_point_id_map.get(startPoint.getLabel());
-                    end_id = allFloor_point_id_map.get(endPoint.getLabel());
-                    final int[] pred = Dijkstra.dijkstra(t, start_id);
-                    System.out.println("Lift path:");
+//                } catch (Exception e) {
+//                    throw new Exception("The node is not exit!");
+//                }
+//                break;
+//            }
+//            case "L": {
+//                buildLinkedPointsPair_SLE(floors, "L");
+//                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_L);
+//                try {
+//                    start_id = allFloor_point_id_map.get(start.getFloor_name() + "_" + startNode);
+//                    end_id = allFloor_point_id_map.get(end.getFloor_name() + "_" + endNode);
+//                    final int[] pred = Dijkstra.dijkstra(t, start_id);
+//                    System.out.println("Lift path:");
 //                    Dijkstra.printPath(t, pred, start_id, end_id);
-                    path = Dijkstra.getPointsInPath(t, pred, start_id, end_id);
-                } catch (Exception e) {
-                    throw new Exception("The node is not exit!");
-                }
-                break;
-            }
-            case "E": {
-                buildLinkedPointsPair_SLE(floors, "E");
-
-                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_E);
-                System.out.println(t.isConnected());
-                print4J(allFloor_point_id_map);
-
-                try {
-                    start_id = allFloor_point_id_map.get(startPoint.getLabel());
-                    end_id = allFloor_point_id_map.get(endPoint.getLabel());
-                    System.out.println(start_id);
-                    System.out.println(end_id);
-                    final int[] pred = Dijkstra.dijkstra(t, start_id);
-                    System.out.println("Escalator path:");
+//                } catch (Exception e) {
+//                    throw new Exception("The node is not exit!");
+//                }
+//                break;
+//            }
+//            case "E": {
+//                buildLinkedPointsPair_SLE(floors, "E");
+//
+//                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_E);
+//                System.out.println(t.isConnected());
+//                print4J(allFloor_point_id_map);
+//
+//                try {
+//                    start_id = allFloor_point_id_map.get(start.getFloor_name() + "_" + startNode);
+//                    end_id = allFloor_point_id_map.get(end.getFloor_name() + "_" + endNode);
+//                    System.out.println(start_id);
+//                    System.out.println(end_id);
+//                    final int[] pred = Dijkstra.dijkstra(t, start_id);
+//                    System.out.println("Escalator path:");
 //                    Dijkstra.printPath(t, pred, start_id, end_id);
-                    path = Dijkstra.getPointsInPath(t, pred, start_id, end_id);
-                } catch (Exception e) {
-                    throw new Exception("The node is not exit!");
-                }
-                break;
-            }
-            case "A":{
-                buildLinkedPointsPair(floors);
-                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_SLE);
-                try {
-                    start_id = allFloor_point_id_map.get(startPoint.getLabel());
-                    end_id = allFloor_point_id_map.get(endPoint.getLabel());
-                    final int[] pred = Dijkstra.dijkstra(t, start_id);
-                    System.out.println("Anyway path:");
+//                } catch (Exception e) {
+//                    throw new Exception("The node is not exit!");
+//                }
+//                break;
+//            }
+//            case "A":{
+//                buildLinkedPointsPair(floors);
+//                WeightedGraph t = buildBigGraph(floors, LinkedPointsPair_SLE);
+//                try {
+//                    start_id = allFloor_point_id_map.get(start.getFloor_name() + "_" + startNode);
+//                    end_id = allFloor_point_id_map.get(end.getFloor_name() + "_" + endNode);
+//                    final int[] pred = Dijkstra.dijkstra(t, start_id);
+//                    System.out.println("Anyway path:");
 //                    Dijkstra.printPath(t, pred, start_id, end_id);
-                    path = Dijkstra.getPointsInPath(t, pred, start_id, end_id);
+//                } catch (Exception e) {
+//                    throw new Exception("The node is not exit!");
+//                }
+//                break;
+//            }
+//            default:
+//                System.out.println("please input the correct mode:(S,L,E,A)");
+//        }
+//
+//    }
 
-                } catch (Exception e) {
-                    throw new Exception("The node is not exit!");
-                }
-                break;
-            }
-            default:
-                System.out.println("please input the correct mode:(S,L,E,A)");
-        }
-
-        ArrayList<Point> allPoints = new ArrayList<>();
-        for (Floor floor:floors){
-            allPoints.addAll(floor.getAllPoints());
-        }
-
-        ArrayList<Point> allPointsInPath = new ArrayList<>();
-        for (String p:path){
-            for (Point point:allPoints)
-                if (point.label.equals(p))
-                    allPointsInPath.add(point);
-        }
-        return allPointsInPath;
-    }
 
 
     /*给定随机起始点和目的点，是模糊点。返回路径多有点的集合*/
-    public static ArrayList<Point> Trace(Floor startFloor, Point startRandomPoint, Floor endFloor, Point endRandomPoint, ArrayList<Floor> floors, String way){
+    public static ArrayList<Point> Trace1(Floor startFloor, Point startRandomPoint, Floor endFloor, Point endRandomPoint, ArrayList<Floor> floors, String way){
         ArrayList<Point> allPointsInPath = new ArrayList<>();
 
         //修改起点和终点的label，加上Floor_name前缀
@@ -525,73 +432,52 @@ public class Main {
     }
 
 
-    public static ArrayList<Point> Trace2(Floor startFloor, Point startRandomPoint, Floor endFloor, Point endRandomPoint, ArrayList<Floor> floors, String way){
-        ArrayList<Point> allPointsInPath = new ArrayList<>();
-        //修改起点和终点的label，加上Floor_name前缀
-        startRandomPoint.setLabel(startFloor.getFloor_name()+"_"+startRandomPoint.label);
-        endRandomPoint.setLabel(endFloor.getFloor_name()+"_"+endRandomPoint.label);
-
-
-        //起始点在其所在层找到最近的点，然后加入到这一层
-        Point startCCP = getNearestPointOnRoadAndAddToFloor(startFloor, startRandomPoint);
-        startCCP.printPoint();
-
-        //目的地点在其所在层找到最近点，然后加入到这一层
-        Point endCCP = getNearestPointOnRoadAndAddToFloor(endFloor, endRandomPoint);
-        endCCP.printPoint();
-
-        try {
-            allPointsInPath =  showPath(floors, startCCP, endCCP, way);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return allPointsInPath;
-    }
-
 
     public static void main(String[] args) throws Exception {
         String file3 = "src/main/data/3.2_data.txt";
-        Floor floor3 = buildFloorFromFile(3, "floor3", file3);
-
         String file5 = "src/main/data/5.2_data.txt";
-        Floor floor5 = buildFloorFromFile(5, "floor5", file5);
-//        System.out.println(floor5.getAllPoints().size());
-//        floor5.describeFloor();
-
         String file4 = "src/main/data/4.2_data.txt";
+        Floor floor3 = buildFloorFromFile(3, "floor3", file3);
+        Floor floor5 = buildFloorFromFile(5, "floor5", file5);
         Floor floor4 = buildFloorFromFile(4, "floor4", file4);
-//        System.out.println(floor4.getAllPoints().size());
-//        floor4.describeFloor();
 
         ArrayList<Floor> floors = new ArrayList<>();
         floors.add(floor3);
         floors.add(floor4);
         floors.add(floor5);
         //start common free point
-        Point start = new Point("SCFP", new Double[]{1043.702,990.246});
-//        Point start = new Point("CF", new Double[]{903.421,991.291});
-//        Point end = new Point("CF", new Double[]{1043.702,999.082});
+//        Point start = new Point("SCFP", new Double[]{1053.066,990.246}); //三楼
+        Point start = new Point("SCFP", new Double[]{930.6040,995.7782}); //三楼起点
+//        Point end = new Point("ECFP", new Double[]{1044.3379,999.6648}); //3楼终点
+
         //end common free point
-        Point end = new Point("ECFP", new Double[]{996.002,989.779});
+//        Point end = new Point("ECFP", new Double[]{996.002,989.779}); //五楼
+//        Point end = new Point("ECFP", new Double[]{1043.702,999.082}); //五楼
+        Point end = new Point("ECFP", new Double[]{1045.934,1000.458}); //4楼终点
 
-//        ArrayList<Point> resultA = Trace(floor4, start, floor5, end, floors, "A");
-//        for (Point point:resultA)
-//            System.out.print(point.label +":"+"["+point.X+","+point.Y+"] => ");
-
-//        ArrayList<Point> resultL = Trace(floor4, start, floor5, end, floors, "L");
-//        for (Point point:resultL)
-//            System.out.print(point.label +":"+"["+point.X+","+point.Y+"] => ");
 //
-        ArrayList<Point> resultS = Trace2(floor3, start, floor5, end, floors, "S");
+        ArrayList<Point> resultS = Trace(floor3, start, floor4, end, floors, "E");
         System.out.print("[");
         System.out.print("{x:" + start.X + ",y:" + start.Y + "," + "id:\"" + start.label + "\"},");
         for (Point point:resultS) {
             System.out.print("{x:" + point.X + ",y:" + point.Y + "," + "id:\"" + point.label + "\"},");
-//            System.out.print(point.label +":"+"["+point.X+","+point.Y+"] => ");
         }
         System.out.print("{x:" + end.X + ",y:" + end.Y + "," + "id:\"" + end.label + "\"},");
         System.out.print("]");
+
+        //
+        ArrayList<Point> resultL = Trace(floor3, start, floor4, end, floors, "L");
+        System.out.print("[");
+        System.out.print("{x:" + start.X + ",y:" + start.Y + "," + "id:\"" + start.label + "\"},");
+        for (Point point:resultL) {
+            System.out.print("{x:" + point.X + ",y:" + point.Y + "," + "id:\"" + point.label + "\"},");
+        }
+        System.out.print("{x:" + end.X + ",y:" + end.Y + "," + "id:\"" + end.label + "\"},");
+        System.out.print("]");
+
+
+
+
 //
 //        ArrayList<Point> resultE = Trace(floor4, start, floor5, end, floors, "E");
 //        for (Point point:resultE)

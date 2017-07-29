@@ -82,20 +82,6 @@ public class Utils {
         }
     }
 
-    public static void buildallFloor_point_id_map(ArrayList<Floor> floors){
-        //构造大图
-        ArrayList<Point[]> allPointsPair = new ArrayList<>();
-        ArrayList<Point> allPoints = new ArrayList<>();
-        for (Floor floor:floors){
-            allPointsPair.addAll(floor.getAllPointsPair());
-            allPoints.addAll(floor.getAllPoints());
-        }
-
-        for (int i=0;i<allPoints.size();i++){
-            allFloor_point_id_map.put(allPoints.get(i).getLabel(), i);
-        }
-
-    }
 
     public static WeightedGraph buildBigGraph(ArrayList<Floor> floors,ArrayList<Point[]> LinkedPointsPair) throws Exception {
         Double shortestEdges = getShortestEdges(floors);
@@ -109,7 +95,7 @@ public class Utils {
             allPoints.addAll(floor.getAllPoints());
         }
 //        allPointsPair.addAll(LinkedPointsPair);
-        //
+
         for (int i=0;i<allPoints.size();i++){
             allFloor_point_id_map.put(allPoints.get(i).getLabel(), i);
         }
@@ -419,19 +405,6 @@ public class Utils {
         }
         System.out.println("}");
     }
-//    private static void print4J(Object obj){
-//        if (obj instanceof Map){
-//            Iterator iter = obj.entrySet().iterator();
-//            System.out.print("{ ");
-//            while (iter.hasNext()) {
-//                Map.Entry entry = (Map.Entry) iter.next();
-//                Object key = entry.getKey();
-//                Object val = entry.getValue();
-//                System.out.print(key + ":" + val + ", ");
-//            }
-//            System.out.println("}");
-//        }
-//    }
 
     //检测是不是有错误数据，比如lable相同，但是坐标不同,或者坐标相同但是label不同
     private static boolean hasErrorPoint( List<Point> setPoints){
@@ -461,32 +434,6 @@ public class Utils {
     }
 
     /*每层返回一个元祖(String start,String end,ArrayList path, Double distance)*/
-    public static ArrayList<Quartet<String, String, ArrayList<Object>,Double>> getResultWithinFloor(Floor floor){
-        ArrayList<Quartet<String, String, ArrayList<Object>,Double>> result = new ArrayList<>();
-        WeightedGraph graph = floor.getGraph();
-        HashMap<String, Integer> point_id_map = floor.getPoint_id_map();
-        for (String common_point:floor.getCommon_points()){
-            Integer start_point_id = point_id_map.get(common_point);
-            final int[] pred = Dijkstra.dijkstra(graph, start_point_id);
-            //stairs
-            for (String stair:floor.getStairs()){
-                Quartet Q = Dijkstra.getResultTuple(graph, point_id_map, pred, common_point, stair);
-                result.add(Q);
-            }
-            //lifts
-            for (String lift:floor.getLifts()){
-                Quartet Q = Dijkstra.getResultTuple(graph, point_id_map, pred, common_point, lift);
-                result.add(Q);
-            }
-            //escalator
-            for (String escalator:floor.getEscalators()){
-                Quartet Q = Dijkstra.getResultTuple(graph, point_id_map,pred, common_point, escalator);
-                result.add(Q);
-            }
-        }
-        return result;
-    }
-
     public static ArrayList<Quartet<String, String, ArrayList<Object>,Double>> getResultWithinFloor(Floor floor, String start_point_name){
         ArrayList<Quartet<String, String, ArrayList<Object>,Double>> result = new ArrayList<>();
         WeightedGraph graph = floor.getGraph();
