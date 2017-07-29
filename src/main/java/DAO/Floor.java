@@ -353,7 +353,7 @@ public class Floor {
                 throw new Exception("The graph is not connected!");
             }
         }
-        this.describeFloor();
+//        this.describeFloor();
     }
 
 

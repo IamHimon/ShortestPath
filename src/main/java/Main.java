@@ -533,13 +533,15 @@ public class Main {
 
 
         //起始点在其所在层找到最近的点，然后加入到这一层
-        getNearestPointOnRoadAndAddToFloor(startFloor, startRandomPoint);
+        Point startCCP = getNearestPointOnRoadAndAddToFloor(startFloor, startRandomPoint);
+        startCCP.printPoint();
 
         //目的地点在其所在层找到最近点，然后加入到这一层
-        getNearestPointOnRoadAndAddToFloor(endFloor, endRandomPoint);
+        Point endCCP = getNearestPointOnRoadAndAddToFloor(endFloor, endRandomPoint);
+        endCCP.printPoint();
 
         try {
-            allPointsInPath =  showPath(floors, startRandomPoint, endRandomPoint, way);
+            allPointsInPath =  showPath(floors, startCCP, endCCP, way);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -566,11 +568,12 @@ public class Main {
         floors.add(floor3);
         floors.add(floor4);
         floors.add(floor5);
-
-        Point start = new Point("CF", new Double[]{1053.066,990.246});
+        //start common free point
+        Point start = new Point("SCFP", new Double[]{1043.702,990.246});
 //        Point start = new Point("CF", new Double[]{903.421,991.291});
 //        Point end = new Point("CF", new Double[]{1043.702,999.082});
-        Point end = new Point("CF", new Double[]{996.002,989.779});
+        //end common free point
+        Point end = new Point("ECFP", new Double[]{996.002,989.779});
 
 //        ArrayList<Point> resultA = Trace(floor4, start, floor5, end, floors, "A");
 //        for (Point point:resultA)
@@ -582,10 +585,12 @@ public class Main {
 //
         ArrayList<Point> resultS = Trace2(floor3, start, floor5, end, floors, "S");
         System.out.print("[");
+        System.out.print("{x:" + start.X + ",y:" + start.Y + "," + "id:\"" + start.label + "\"},");
         for (Point point:resultS) {
             System.out.print("{x:" + point.X + ",y:" + point.Y + "," + "id:\"" + point.label + "\"},");
 //            System.out.print(point.label +":"+"["+point.X+","+point.Y+"] => ");
         }
+        System.out.print("{x:" + end.X + ",y:" + end.Y + "," + "id:\"" + end.label + "\"},");
         System.out.print("]");
 //
 //        ArrayList<Point> resultE = Trace(floor4, start, floor5, end, floors, "E");

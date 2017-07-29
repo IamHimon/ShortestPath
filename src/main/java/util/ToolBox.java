@@ -216,7 +216,7 @@ public class ToolBox {
     }
 
     /*找到路网上最近的点（绕开障碍物），然后将这一点加入到Floor中，重构Graph*/
-    public static void getNearestPointOnRoadAndAddToFloor(Floor floor, Point point){
+    public static Point getNearestPointOnRoadAndAddToFloor(Floor floor, Point point){
         Double shortestDistance = Double.MAX_VALUE;
         ArrayList<Point[]> allPointsPair = floor.getAllPointsPair();
         ArrayList<Point[]> allBarrierPointsPair = floor.getAllBarrierPointsPair();
@@ -228,6 +228,7 @@ public class ToolBox {
             hasBarrier = false;
             try {
                 Point closedPoint = getClosestPointOnSegment(allPointsPair.get(i), point);
+                closedPoint.setLabel(floor.getFloor_name()+"_CCP");//name common closed point
                 allClosedPoints.add(closedPoint);
                 for(Point[] pp:allBarrierPointsPair){
                     if (isIntersects(new Point[]{closedPoint, point}, pp)) {
@@ -250,16 +251,15 @@ public class ToolBox {
         System.out.println("The segment:");
         allPointsPair.get(nearestPointIndex)[0].printPoint();
         allPointsPair.get(nearestPointIndex)[1].printPoint();
-        allClosedPoints.get(nearestPointIndex).printPoint();
         Point closedPoint = allClosedPoints.get(nearestPointIndex);
         try {
             floor.addCommonPoint(allPointsPair.get(nearestPointIndex),closedPoint);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        closedPoint.printPoint();
+//        closedPoint.printPoint();
 
-//        return allClosedPoints.get(nearestPointIndex);
+        return closedPoint;
     }
 
 
@@ -336,7 +336,7 @@ public class ToolBox {
         {
             closestPoint = new Point(sx1 + u * xDelta,sy1 + u * yDelta);
         }
-        closestPoint.setLabel("CCP");//common closed point
+
         return closestPoint;
     }
 
@@ -373,13 +373,17 @@ public class ToolBox {
 
 
 
-            String file3 = "src/main/data/3.2_data.txt";
             try {
-                Floor floor3 = buildFloorFromFile(3, "floor3", file3);
-//                Point start = new Point("CF", new Double[]{1053.066,990.246});
-                Point start = new Point("CF", new Double[]{1047.066,990.246});
+//                String file3 = "src/main/data/3.2_data.txt";
+//                Floor floor3 = buildFloorFromFile(3, "floor3", file3);
 
-                getNearestPointOnRoadAndAddToFloor(floor3, start);
+                String file5 = "src/main/data/5.2_data.txt";
+                Floor floor5 = buildFloorFromFile(5, "floor5", file5);
+//                Point start = new Point("CF", new Double[]{1053.066,990.246});
+//                Point start = new Point("CF", new Double[]{1047.066,990.246});
+                Point end = new Point("ECF", new Double[]{996.002,989.779});
+
+                getNearestPointOnRoadAndAddToFloor(floor5, end);
 
 //                floor3.describeFloor();
             } catch (Exception e) {
