@@ -449,7 +449,9 @@ public class ToolBox {
         endCCP.printPoint();
 
         allPointsInPath =  showPath(floors, startCCP, endCCP, way);
-
+        //起点和终点也加入到result中，
+        allPointsInPath.add(0, startRandomPoint);
+        allPointsInPath.add(endRandomPoint);
         return allPointsInPath;
     }
 

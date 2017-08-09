@@ -2,6 +2,11 @@ package DAO;
 
 /**
  * Created by student on 2017/7/4.
+ * 表示一点的类，属性有：x坐标，y坐标，点的名称，和坐标对
+ * @X x坐标
+ * @Y y坐标
+ * @label 点的名称
+ * @point 坐标对:{X, Y}
  */
 public class Point {
     public Double X;

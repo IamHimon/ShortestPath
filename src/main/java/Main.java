@@ -458,15 +458,13 @@ public class Main {
 //
         ArrayList<Point> resultS = Trace(floor3, start, floor4, end, floors, "E");
         System.out.print("[");
-        System.out.print("{x:" + start.X + ",y:" + start.Y + "," + "id:\"" + start.label + "\"},");
         for (Point point:resultS) {
             System.out.print("{x:" + point.X + ",y:" + point.Y + "," + "id:\"" + point.label + "\"},");
         }
-        System.out.print("{x:" + end.X + ",y:" + end.Y + "," + "id:\"" + end.label + "\"},");
         System.out.print("]");
 
         //
-        ArrayList<Point> resultL = Trace(floor3, start, floor4, end, floors, "L");
+        /*ArrayList<Point> resultL = Trace(floor3, start, floor4, end, floors, "L");
         System.out.print("[");
         System.out.print("{x:" + start.X + ",y:" + start.Y + "," + "id:\"" + start.label + "\"},");
         for (Point point:resultL) {
@@ -474,7 +472,7 @@ public class Main {
         }
         System.out.print("{x:" + end.X + ",y:" + end.Y + "," + "id:\"" + end.label + "\"},");
         System.out.print("]");
-
+*/
 
 
 
